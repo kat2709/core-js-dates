@@ -181,8 +181,24 @@ function formatDate(date) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const curMonth = String(month).padStart(2, '0');
+  const saturdaysArr = [];
+  const sundaysArr = [];
+  const allDaysInMonth = new Date(year, month, 0).getDate();
+
+  for (let i = 1; i <= allDaysInMonth; i += 1) {
+    const date = `${year}-${curMonth}-${String(i).padStart(2, '0')}T00:00:00Z`;
+    const curDate = new Date(date);
+    if (curDate.getDay() === 0) {
+      sundaysArr.push(curDate);
+    }
+    if (curDate.getDay() === 6) {
+      saturdaysArr.push(curDate);
+    }
+  }
+
+  return sundaysArr.length + saturdaysArr.length;
 }
 
 /**
@@ -196,8 +212,33 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const daysOfTheWeek = {
+    1: 6,
+    2: 5,
+    3: 4,
+    4: 3,
+    5: 2,
+    6: 1,
+  };
+  let week = 0;
+  let startDate = `${date.getFullYear()}-01-01T00:00:00.000Z`;
+  if (new Date(startDate).getDay() !== 0) {
+    startDate = `${date.getFullYear()}-01-${String(
+      daysOfTheWeek[new Date(startDate).getDay()]
+    ).padStart(2, '0')}T00:00:00.000Z`;
+    week += 1;
+  }
+  const endDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    '0'
+  )}-${String(date.getDate()).padStart(2, '0')}T00:00:00.000Z`;
+  if (Date.parse(startDate) >= Date.parse(endDate)) {
+    return 1;
+  }
+  return Math.ceil(
+    ((Date.parse(endDate) - Date.parse(startDate)) / 86400000 + 1) / 7 + week
+  );
 }
 
 /**
