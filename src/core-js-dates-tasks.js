@@ -33,8 +33,9 @@ function dateToTimestamp(date) {
  * Date(2023, 5, 1, 8, 20, 55) => '08:20:55'
  * Date(2015, 10, 20, 23, 15, 1) => '23:15:01'
  */
-function getTime(/* date */) {
-  throw new Error('Not implemented');
+function getTime(date) {
+  const strDate = new Date(date);
+  return `${String(strDate.getHours()).padStart(2, '0')}:${String(strDate.getMinutes()).padStart(2, '0')}:${String(strDate.getSeconds()).padStart(2, '0')}`;
 }
 
 /**
@@ -72,8 +73,21 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const daysOfTheWeek = {
+    1: 4,
+    2: 3,
+    3: 2,
+    4: 1,
+    5: 7,
+    6: 6,
+    0: 5,
+  };
+  const curDate = new Date(date);
+  const day = curDate.getDate();
+  const dayOfWeek = curDate.getDay();
+  const newDay = day + daysOfTheWeek[dayOfWeek];
+  return new Date(curDate.setDate(newDay));
 }
 
 /**
